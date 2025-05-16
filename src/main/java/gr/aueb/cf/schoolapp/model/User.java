@@ -1,4 +1,4 @@
-package gr;
+package gr.aueb.cf.schoolapp.model;
 
 import gr.aueb.cf.schoolapp.core.enums.RoleType;
 import jakarta.persistence.*;
@@ -14,7 +14,7 @@ import java.security.Principal;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements Principal  {
+public class User implements Principal, IdentifiableEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
