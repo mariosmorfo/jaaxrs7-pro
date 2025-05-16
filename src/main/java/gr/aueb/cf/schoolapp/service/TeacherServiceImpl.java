@@ -13,6 +13,9 @@ import gr.aueb.cf.schoolapp.model.Teacher;
 import gr.aueb.cf.schoolapp.service.util.JPAHelper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.ext.Provider;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+
 public class TeacherServiceImpl implements ITeacherService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TeacherServiceImpl.class);
@@ -30,10 +33,10 @@ public class TeacherServiceImpl implements ITeacherService {
     //@Inject
     private final ITeacherDAO teacherDAO;
 
-//    @Inject
-//    public TeacherServiceImpl(ITeacherDAO teacherDAO) {
-//        this.teacherDAO = teacherDAO;
-//    }
+    @Inject
+    public TeacherServiceImpl(ITeacherDAO teacherDAO) {
+        this.teacherDAO = teacherDAO;
+    }
 
     @Override
     public TeacherReadOnlyDTO insertTeacher(TeacherInsertDTO insertDTO)
@@ -42,9 +45,8 @@ public class TeacherServiceImpl implements ITeacherService {
             JPAHelper.beginTransaction();
             Teacher teacher = Mapper.mapToTeacher(insertDTO);
 
-
             // Insert is NOT idempotent, (is not unchangeable)
-            if (teacherDAO.getByVat(insertDTO.getVat()).isPresent()) {
+            if (teacherDAO.findByField("vat", insertDTO.getVat()).isPresent()) {
                 throw new EntityAlreadyExistsException("Teacher", "Teacher with vat: " + insertDTO.getVat() + " already exists");
             }
 
@@ -52,7 +54,7 @@ public class TeacherServiceImpl implements ITeacherService {
                     .map(Mapper::mapToTeacherReadOnlyDTO)
                     .orElseThrow(() -> new EntityInvalidArgumentException("Teacher", "Teacher with VAT=" + insertDTO.getVat() + " not inserted"));
             JPAHelper.commitTransaction();
-            LOGGER.info("Teacher with id: {}, vat: {},  firstname {}, lastname {} inserted",
+            LOGGER.info("Teacher with id={}, vat={},  firstname={}, lastname={} inserted",
                     teacher.getId(), teacher.getVat(), teacher.getLastname(), teacher.getFirstname());
             return readOnlyDTO;
         } catch (EntityInvalidArgumentException e) {
@@ -74,11 +76,11 @@ public class TeacherServiceImpl implements ITeacherService {
 //            if (teacherDAO.getByVat(updateDTO.getVat()).isEmpty()) {
 //                throw new EntityNotFoundException("Teacher", "Teacher with vat: " + updateDTO.getVat() + " not found");
 //            }
-            teacherDAO.getByVat(updateDTO.getVat()).orElseThrow(() -> new EntityNotFoundException("Teacher", "Teacher with vat: "
-                        + updateDTO.getVat() + " not found"));
+            teacherDAO.findByField("vat", updateDTO.getVat()).orElseThrow(() -> new EntityNotFoundException("Teacher", "Teacher with vat: "
+                    + updateDTO.getVat() + " not found"));
 
-            teacherDAO.getById(updateDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Teacher", "Teacher with vat: "
-                        + updateDTO.getVat() + " not found"));
+            teacherDAO.getById(updateDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Teacher", "Teacher with id: "
+                    + updateDTO.getId() + " not found"));
 
             TeacherReadOnlyDTO readOnlyDTO = teacherDAO.update(teacher)
                     .map(Mapper::mapToTeacherReadOnlyDTO)
@@ -140,10 +142,11 @@ public class TeacherServiceImpl implements ITeacherService {
     public List<TeacherReadOnlyDTO> getAllTeachers() {
         try {
             JPAHelper.beginTransaction();
-            List<TeacherReadOnlyDTO> readOnlyDTOS = teacherDAO.getAll()
-                    .stream()
-                    .map(Mapper::mapToTeacherReadOnlyDTO)
-                    .toList();
+//            List<TeacherReadOnlyDTO> readOnlyDTOS = teacherDAO.getAll()
+//                    .stream()
+//                    .map(Mapper::mapToTeacherReadOnlyDTO)
+//                    .toList();
+            List<TeacherReadOnlyDTO> readOnlyDTOS = Mapper.teachersToReadOnlyDTOs(teacherDAO.getAll());
             JPAHelper.commitTransaction();
             return readOnlyDTOS;
         } finally {
