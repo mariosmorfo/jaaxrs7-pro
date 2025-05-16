@@ -3,6 +3,7 @@ package gr.aueb.cf.schoolapp.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.ws.rs.GET;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,7 @@ public abstract class AbstractEntity {
         if(createdAt == null) createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
-
+    @PreUpdate
     protected void onUpdate(){
         updatedAt = LocalDateTime.now();
     }
