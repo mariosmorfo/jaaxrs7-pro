@@ -23,17 +23,22 @@ import java.util.Map;
 
 
 @ApplicationScoped
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+
 @Path("/teachers")
 public class TeacherRestController {
 
 
     private ITeacherService teacherService;
 
+
+
     @Inject
     public TeacherRestController(ITeacherService teacherService) {
         this.teacherService = teacherService;
     }
+
+
+
     @POST
     @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -113,6 +118,9 @@ public class TeacherRestController {
                .build();
     }
 
+    @GET
+    @Path("/filtered-paginated")
+    @Produces(MediaType.APPLICATION_JSON)
     public PaginatedResult<TeacherReadOnlyDTO> getFilteredPaginated(@QueryParam("firstname") @DefaultValue("") String firstname,
                                                                     @QueryParam("lastname") @DefaultValue("") String lastname,
                                                                     @QueryParam("vat") @DefaultValue("") String vat,
