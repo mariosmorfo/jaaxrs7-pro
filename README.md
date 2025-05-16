@@ -1,1 +1,1 @@
-# jaaxrs7-pro
+# schoolapp7-pro
