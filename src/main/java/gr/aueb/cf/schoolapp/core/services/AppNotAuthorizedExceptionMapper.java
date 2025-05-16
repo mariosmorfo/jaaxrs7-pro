@@ -5,7 +5,9 @@ import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
+@Provider
 public class AppNotAuthorizedExceptionMapper implements ExceptionMapper<NotAuthorizedException>  {
     @Override
     public Response toResponse(NotAuthorizedException exception) {

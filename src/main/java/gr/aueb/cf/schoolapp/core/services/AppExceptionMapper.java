@@ -5,9 +5,10 @@ import gr.aueb.cf.schoolapp.dto.ResponseMessageDTO;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
 import java.lang.annotation.Repeatable;
-
+@Provider
 public class AppExceptionMapper implements ExceptionMapper<EntityGenericException>  {
     @Override
     public Response toResponse(EntityGenericException exception) {
