@@ -59,6 +59,4 @@ public class Mapper {
 //        return new UserReadOnlyDTO(user.getId(), user.getUsername(), user.getPassword(),
 //                user.getRoleType().name());
 //    }
-
 }
-
