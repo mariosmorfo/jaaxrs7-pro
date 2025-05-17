@@ -10,7 +10,7 @@ import java.util.Optional;
 @ApplicationScoped
 public class UserDAOImpl extends AbstractDAO<User> implements IUserDAO {
     @Override
-    public Optional<User> getByUserName(String username) {
+    public Optional<User> getByUsername(String username) {
        String sql = "SELECT u FROM User u WHERE u.username = :username";
 
        try{
