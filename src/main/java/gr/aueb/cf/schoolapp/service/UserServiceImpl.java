@@ -52,7 +52,7 @@ public class UserServiceImpl implements IUserService{
             JPAHelper.beginTransaction();
 
 
-            UserReadOnlyDTO readOnlyDTO = userDAO.getByUserName(username)
+            UserReadOnlyDTO readOnlyDTO = userDAO.getByUsername(username)
                     .map(Mapper::mapToUserReadOnlyDTO)
                     .orElseThrow(() ->new EntityNotFoundException("User", "User with username" + username  + " not found"));
 
