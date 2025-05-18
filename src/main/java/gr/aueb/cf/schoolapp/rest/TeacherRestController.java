@@ -119,19 +119,17 @@ public class TeacherRestController {
     }
 
     @GET
-    @Path("/filtered-paginated")
+    @Path("/paginated")
     @Produces(MediaType.APPLICATION_JSON)
     public PaginatedResult<TeacherReadOnlyDTO> getFilteredPaginated(@QueryParam("firstname") @DefaultValue("") String firstname,
                                                                     @QueryParam("lastname") @DefaultValue("") String lastname,
                                                                     @QueryParam("vat") @DefaultValue("") String vat,
-                                                                    @QueryParam("page") @DefaultValue("") Integer page,
-                                                                    @QueryParam("size") @DefaultValue("") Integer size)
+                                                                    @QueryParam("page") @DefaultValue("0") Integer page,
+                                                                    @QueryParam("size") @DefaultValue("10") Integer size)
             throws EntityInvalidArgumentException
     {
         TeacherFiltersDTO filtersDTO = new TeacherFiltersDTO(firstname, lastname, vat);
-        Map<String, Object> criteria;
-
-        criteria = Mapper.mapToCriteria(filtersDTO);
+        Map<String , Object> criteria = Mapper.mapToCriteria(filtersDTO);
 
         if(page<0) throw new EntityInvalidArgumentException("PageInvalidNumber", "Invalid page number");
         if(size<=0) throw new EntityInvalidArgumentException("PageInvalidSize", "Invalid page size");
